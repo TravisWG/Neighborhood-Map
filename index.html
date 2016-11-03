@@ -5,15 +5,20 @@
 	  <meta charset="utf-8">
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	  <title>Neighborhood Map Project</title>
-	</head>
+	  <link rel="stylesheet" href="css/style.css">
+	 </head>
 
 	<body>
 		<div class="container">
-			<div class="listings">
+			<div id ="listings">
 				Your listings here!
+			</div>
+			<div id="map">
 			</div>
 		</div>
 
-
+    	<script src="js/map.js"></script>
+    	<script src="js/knockout-3.4.0.js"></script>
+		<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDUDR9cSsSQpt_zZDIooP9Rq-CJ1TlnMPU&v=3&callback=initMap"></script>
 	</body>
 </html>
