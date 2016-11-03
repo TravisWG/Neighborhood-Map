@@ -12,11 +12,40 @@ function initMap() {
 	  zoom: 13
 		});
 
-	for (var i = 0; i < initialLocations.length; i++) {
-		var marker = new google.maps.Marker({
-			map: map,
-			position: initialLocations[i].location,
-			title: initialLocations[i].title
-		});
+	var largeInfowindow = new google.maps.InfoWindow();
+
+	var gymLocations = {
+  	  location: map.center,
+  	  radius: '5000',
+   	  query: 'gym'
+ 	 };
+
+ 	service = new google.maps.places.PlacesService(map);
+  	service.textSearch(gymLocations, gymMarkers);
+
+	function gymMarkers(results){
+		console.log(results)
+		for (var i = 0; i < results.length; i++) {
+			var marker = new google.maps.Marker({
+				map: map,
+				position: results[i].geometry.location,
+				title: results[i].name
+			});
+			marker.address = results[i].formatted_address;
+
+			marker.addListener('click', function() {
+            	createInfoWindow(this, largeInfowindow);
+          	});
+		}
+	};
+
+	function createInfoWindow(clickedmarker, infowindow){
+		var inforWindowContent = "<div><b>" + clickedmarker.title + "</b></div><br><div>" + clickedmarker.address + "</div>"
+		if (infowindow.marker != clickedmarker) {
+			infowindow.marker = clickedmarker;
+			infowindow.setContent(inforWindowContent);
+			infowindow.open(map, clickedmarker);
+
+		}
 	}
-}
+};
