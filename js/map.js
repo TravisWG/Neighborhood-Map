@@ -1,6 +1,9 @@
 //Model Data
 var markers = [];
 
+
+
+
   	//Takes results from Google Text search and creates
 	function gymMarkers(results){
 		for (var i = 0; i < results.length; i++) {
@@ -58,7 +61,7 @@ function initMap() {
 
 	function createListings() {
 		for (var i = 0; i < markers.length; i++) {
-			var listingsContent = "<div><h3>" + markers[i].title + "</h2>" + markers[i].address + "</div><hr>";
+			var listingsContent = "<div><h3>" + markers[i].title + "</h3>" + markers[i].address + "</div><hr>";
 			$('#listings').append(listingsContent);
 		}
 	};

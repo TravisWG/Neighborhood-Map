@@ -10,10 +10,25 @@
 
 	<body>
 		<div class="container">
-			<div id="listings">
-				<h1>Gym Locations:</h1>
+			<div class="col-3">
+				<div id="listings">
+					<h1>Gym Locations:</h1>
+				</div>
 			</div>
-			<div id="map">
+			<div class="col-9">
+				<div id="map">
+				</div>
+				<div id="data">
+					<div id="locationForm">
+						Location: <input type="text" name="location">
+					</div>
+					<div id="distance">
+					</div>
+					<div id="modeSelector">
+						<input type="button" onclick="" value="Run"></input>
+						<input type="button" onclick="" value="Bike"></input>
+					</div>
+				</div>
 			</div>
 		</div>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
