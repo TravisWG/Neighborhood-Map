@@ -19,9 +19,22 @@
 				<div id="map">
 				</div>
 				<div id="data">
+					<h2>Filter results based on distance from chosen location</h2>
 					<div id="locationForm">
-						Location: <input type="text" name="location">
+						Location: <input type="text" id="location" placeholder="743 Evergreen Terrace..."><br>
 					</div>
+					<div id="distanceForm">
+					Within
+						<select id="max-miles">
+							<option value="1">1 mile</option>
+							<option value="2">2 miles</option>
+							<option value="3">3 miles</option>
+							<option value="5">5 miles</option>
+						</select>
+						of selected location<br>
+						<input type="button" onclick="withinDistance()" value="Submit"></input>
+					</div>
+
 					<div id="distance">
 					</div>
 					<div id="modeSelector">
