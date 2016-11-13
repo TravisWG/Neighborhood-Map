@@ -110,9 +110,7 @@ function initMap() {
     }
 
 	function filterByDistance(response){
-		console.log(response)
 		var withinDistance = document.getElementById('max-miles').value;
-		console.log(withinDistance)
 		var results = response.rows[0].elements;
 		var filteredMarkers = []
 		for (var i = 0; i < results.length; i++) {
@@ -125,6 +123,11 @@ function initMap() {
 		}
 		setMarkers(filteredMarkers);
 		createListings(filteredMarkers);
+	}
+
+	function clearFilter() {
+		setMarkers(markers);
+		createListings(markers);
 	}
 
 	//converts meters to miles, rounding to the tenth
