@@ -1,7 +1,7 @@
 //Model Data
 var markers = [];
 var userLocation;
-
+var userMarker
 
 
   	//Takes results from Google Text search and creates
@@ -34,7 +34,7 @@ var map;
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
 	  center: {lat: 46.8772, lng: -96.7898},
-	  zoom: 13
+	  zoom: 12
 		});
 
 	largeInfowindow = new google.maps.InfoWindow();
@@ -88,6 +88,7 @@ function initMap() {
 			window.alert('A starting location is required.')
 		} else{
 			hideMarkers(markers);
+			userLocationMarker(userLocation);
 			var gymDestinations = [];
 			for (var i = 0; i < markers.length; i++){
 				gymDestinations.push(markers[i].address)
@@ -109,7 +110,30 @@ function initMap() {
         }
     }
 
-	function filterByDistance(response){
+    function userLocationMarker(userLocation){
+    	geocoder = new google.maps.Geocoder();
+    	geocoder.geocode({'address': userLocation}, function(results, status) {
+          if (status === 'OK') {
+          	if (userMarker !== undefined){
+          		console.log(userMarker);
+    			userMarker.setPosition(results[0].geometry.location);
+       		}
+    		else{
+    		//map.setCenter(results[0].geometry.location);
+    		userMarker = new google.maps.Marker({
+				map: map,
+				position: results[0].geometry.location,
+				title: "Your Location",
+				animation: google.maps.Animation.BOUNCE,
+			});
+    		}
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+    }
+
+    function filterByDistance(response){
 		var withinDistance = document.getElementById('max-miles').value;
 		var results = response.rows[0].elements;
 		var filteredMarkers = []
@@ -121,6 +145,7 @@ function initMap() {
 				filteredMarkers.push(markers[i])
 			}
 		}
+		console.log(response)
 		setMarkers(filteredMarkers);
 		createListings(filteredMarkers);
 	}
