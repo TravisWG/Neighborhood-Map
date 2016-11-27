@@ -1,6 +1,7 @@
 .container{
-  display: flex;
-  flex-wrap: wrap;
+    width: 100%;
+    display: -webkit-flex;
+    display: flex;
 }
 
 .col-9{

@@ -6,13 +6,21 @@
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	  <title>Neighborhood Map Project</title>
 	  <link rel="stylesheet" href="css/style.css">
-	 </head>
+    </head>
 
 	<body>
 		<div class="container">
 			<div class="col-3">
 				<div id="listings">
 					<h1>Gym Locations:</h1>
+					<div id="list">
+						<ul data-bind="foreach: markerList">
+							<div data-bind="visible: belowDistance">
+						    	<h2 id="marker-name" data-bind="text: title"></h2>
+                				<div id="address" data-bind="text: address"></div>
+                			</div>
+                		</ul>
+					</div>
 				</div>
 			</div>
 			<div class="col-9">
@@ -39,15 +47,19 @@
 					<div id="distance">
 					</div>
 					<div id="modeSelector">
-						<input type="button" onclick="" value="Run"></input>
-						<input type="button" onclick="" value="Bike"></input>
+						<input type="button" onclick="selectRun()" value="Run"></input>
+						<input type="button" onclick="selectBike()" value="Bike"></input>
+
+						<div id="speedSelector">
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="js/knockout-3.4.0.js"></script>
-    	<script src="js/map.js"></script>
+		<script src="js/helper.js"></script>
+		<script src="js/map.js"></script>
     	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDUDR9cSsSQpt_zZDIooP9Rq-CJ1TlnMPU&v=3&callback=initMap"></script>
 	</body>
 </html>
