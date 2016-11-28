@@ -15,9 +15,12 @@
 					<h1>Gym Locations:</h1>
 					<div id="list">
 						<ul data-bind="foreach: markerList">
-							<div data-bind="visible: belowDistance">
+							<div data-bind="visible: belowDistance,click: $parent.changeCurrentMarker">
 						    	<h2 id="marker-name" data-bind="text: title"></h2>
                 				<div id="address" data-bind="text: address"></div>
+                				<div data-bind="visible: distance">
+                					<b><span data-bind="text: distanceText"></span></b>
+                				</div>
                 			</div>
                 		</ul>
 					</div>
