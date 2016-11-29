@@ -34,39 +34,34 @@ var Marker = function(data) {
 		return this.distance() + " miles from your selected location."
 	}, this);
 	this.belowDistance = ko.observable(true);
+	this.phoneNumber = ko.observable();
+	this.selector = ko.observable(false);
 
 	//Creates string to make request to Foursquare API.  Uses Marker object's latlng and title to make more specific request
 	this.foursquareRequest = "https://api.foursquare.com/v2/venues/search?ll=" + this.position.lat() + "," + this.position.lng() + "&limit=1&query=" +
 		this.title() + "&client_id=1KVAFVXFJAXEUUCTRXXNH44P1ECKFTIIRQQKIDPHJVVGMHSC&client_secret=F5HCLY4X51JD3D45MNTMUQFVUZVGSC3M1HIRFVQVTT4B23W0&v=20161127";
 
 	//Makes JSON request using foursquareRequest string, returns venue ID to use for later searches
-	this.getFoursquareID = function(){
-		$.getJSON(this.foursquareRequest, function(data) {
-	        var venueID = data.response.venues[0].id;
-	        return venueID
-	    })
+	this.getFoursquarePhoneNumber = function(obj){
+		$.getJSON(obj.foursquareRequest, function(data) {
+			console.log(data.response.venues.length)
+			console.log(data)
+			if (data.response.venues.length !== 0 && data.response.venues[0].contact.formattedPhone != undefined){
+				var formattedPhoneNumber = data.response.venues[0].contact.formattedPhone;
+				obj.phoneNumber(formattedPhoneNumber);
+		        console.log(obj.phoneNumber())
+		        }
+		  	else{
+		        obj.phoneNumber("Contact info is unavailable for this location.");
+		    }
+		})
 		.success(function(){
-        console.log('hurray!')
-    	})
-	    .error(function(){
-	        console.log('fail!')
-	    });
-	};
-
-	//Creates string to use for hours search in Foursquare API.  Uses returned Venue ID from getFoursquareID() to complete search.
-	this.foursquareHoursRequest = "https://api.foursquare.com/v2/venues/" + this.getFoursquareID + "/hours" + "&client_id=1KVAFVXFJAXEUUCTRXXNH44P1ECKFTIIRQQKIDPHJVVGMHSC&client_secret=F5HCLY4X51JD3D45MNTMUQFVUZVGSC3M1HIRFVQVTT4B23W0&v=20161127";
-
-	//Makes JSON request using foursquareHoursRequest, will return hours, but currently console.log(data) to peruse for parsing.
-	this.getFoursquareHours = function(){
-		$.getJSON(this.foursquareHoursRequest, function(data) {
-	        console.log(data)
+	        console.log("passed!");
 	    })
-		.success(function(){
-        	console.log('hurray!')
-    	})
-	    .error(function(){
-	        console.log('fail!')
-	    });
+		.fail(function(){
+		    console.log('fail!');
+		    obj.phoneNumber("Contact info is unavailable for this location.");
+		});
 	};
 };
 
@@ -79,13 +74,12 @@ var ViewModel = function() {
 
 	this.changeCurrentMarker = function(data){
 		console.dir(data.title());
-		self.currentMarker(data);
 		resetMarkerColor(markerList);
+		resetMarkerSelector(markerList)
 		data.markerData.setIcon("http://maps.google.com/mapfiles/ms/icons/yellow-dot.png");
-		data.getFoursquareID()
+		data.selector(true);
+		data.getFoursquarePhoneNumber(data)
     };
-
-	this.currentMarker = ko.observable();
 };
 
 
@@ -119,6 +113,12 @@ function setMarkers(markerList) {
 function resetMarkerColor(markerList) {
 	for (var i = 0; i < markerList.length; i++) {
 		markerList[i].markerData.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png")
+	}
+};
+
+function resetMarkerSelector(markerList) {
+	for (var i = 0; i < markerList.length; i++) {
+		markerList[i].selector(false);
 	}
 };
 
