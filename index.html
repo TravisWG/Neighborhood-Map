@@ -17,14 +17,14 @@
 						<ul data-bind="foreach: markerList">
 							<div data-bind="visible: belowDistance, click: $parent.changeCurrentMarker">
 						    	<h2 id="marker-name" data-bind="text: title"></h2>
+						    	<div data-bind="visible: distance">
+                					<b><span data-bind="text: distanceText"></span></b>
+                				</div>
                 				<div id="formattedNumber" data-bind="visible: selector">
                 					<div id="address" data-bind="text: address"></div>
                 					<div data-bind="text: phoneNumber"></div>
                 				</div>
-                				<div data-bind="visible: distance">
-                					<b><span data-bind="text: distanceText"></span></b>
-                				</div>
-                			</div>
+                   			</div>
                 		</ul>
 					</div>
 				</div>
@@ -38,7 +38,7 @@
 						Location: <input type="text" id="location" placeholder="743 Evergreen Terrace..."><br>
 					</div>
 					<div id="distanceForm">
-					Within
+						Within
 						<select id="max-miles">
 							<option value="1">1 mile</option>
 							<option value="2">2 miles</option>
@@ -48,15 +48,16 @@
 						of selected location<br>
 						<input type="button" onclick="withinDistance()" value="Submit"></input>
 						<input type="button" onclick="clearFilter()" value="Clear Filter"></input>
-					</div>
-
-					<div id="distance">
-					</div>
-					<div id="modeSelector">
-						<input type="button" onclick="selectRun()" value="Run"></input>
-						<input type="button" onclick="selectBike()" value="Bike"></input>
-
 						<div id="speedSelector">
+							<h4>Select a running speed:</h4>
+							<select id="speed" data-bind="options: runSpeed,
+													    	optionsText: 'name',
+															value: speed,">
+							</select>
+						</div>
+						<div id="distance" data-bind="foreach: markerList">
+ 								<b><div data-bind="if: $parent.distance, visible: selector">
+ 								Estimated time to selected location at current speed is approximately <span data-bind="text: $parent.formattedTime()"></span></b>
 						</div>
 					</div>
 				</div>
@@ -64,7 +65,6 @@
 		</div>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="js/knockout-3.4.0.js"></script>
-		<script src="js/helper.js"></script>
 		<script src="js/map.js"></script>
     	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDUDR9cSsSQpt_zZDIooP9Rq-CJ1TlnMPU&v=3&callback=initMap"></script>
 	</body>

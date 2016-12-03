@@ -5,6 +5,7 @@ var userLocation;
 var userMarker;
 var markerList = [];
 
+
 //Takes results from Google Text search and creates markers and marker arrays
 function gymMarkers(results){
 	for (var i = 0; i < results.length; i++) {
@@ -22,10 +23,15 @@ function gymMarkers(results){
     }
 
     ko.applyBindings(new ViewModel());
+
+    //calls all the Foursquare JSON requests
+    for (i = 0; i < markerList.length; i++){
+    	markerList[i].getFoursquarePhoneNumber(markerList[i]);
+    }
 };
 
 var Marker = function(data) {
-	this.markerData = data;
+	this.markerData = data;  //Google Maps marker data associated with this object
 	this.position = this.markerData.position;
 	this.title = ko.observable(data.title);
 	this.address = ko.observable(data.address);
@@ -37,6 +43,7 @@ var Marker = function(data) {
 	this.phoneNumber = ko.observable();
 	this.selector = ko.observable(false);
 
+
 	//Creates string to make request to Foursquare API.  Uses Marker object's latlng and title to make more specific request
 	this.foursquareRequest = "https://api.foursquare.com/v2/venues/search?ll=" + this.position.lat() + "," + this.position.lng() + "&limit=1&query=" +
 		this.title() + "&client_id=1KVAFVXFJAXEUUCTRXXNH44P1ECKFTIIRQQKIDPHJVVGMHSC&client_secret=F5HCLY4X51JD3D45MNTMUQFVUZVGSC3M1HIRFVQVTT4B23W0&v=20161127";
@@ -44,8 +51,6 @@ var Marker = function(data) {
 	//Makes JSON request using foursquareRequest string, returns venue ID to use for later searches
 	this.getFoursquarePhoneNumber = function(obj){
 		$.getJSON(obj.foursquareRequest, function(data) {
-			console.log(data.response.venues.length)
-			console.log(data)
 			if (data.response.venues.length !== 0 && data.response.venues[0].contact.formattedPhone != undefined){
 				var formattedPhoneNumber = data.response.venues[0].contact.formattedPhone;
 				obj.phoneNumber(formattedPhoneNumber);
@@ -70,16 +75,41 @@ var ViewModel = function() {
 
 	markers.forEach(function(markerItem){
 		markerList.push( new Marker(markerItem) );
-	});
+		});
+
+	this.distance = ko.observable(false)
+	this.speed = ko.observable(5)  //default value at 5 mph
+
+	this.runSpeed = [
+		{ name: '5 MPH', speed: 5 },
+		{ name: '6 MPH', speed: 6 },
+		{ name: '7 MPH', speed: 7 },
+		{ name: '8 MPH', speed: 8 },
+		{ name: '9 MPH', speed: 9 },
+		{ name: '10 MPH', speed: 10 },
+		{ name: '11 MPH', speed: 11 },
+		{ name: '12 MPH', speed: 12 }
+	];
+
+	//Minutes to MM:SS converter taken from http://stackoverflow.com/questions/17599054/is-there-a-simple-way-to-convert-a-decimal-time-e-g-1-074-minutes-into-mmss
+	// Credit to user Matt Johnson
+	//Reformatted for suitable use
+	this.formattedTime= ko.computed(function(){
+ 		minutes = (this.distance() / this.speed().speed * 60);
+ 		var sign = minutes < 0 ? "-" : "";
+ 		var min = Math.floor(Math.abs(minutes));
+ 		var sec = Math.floor((Math.abs(minutes) * 60) % 60);
+ 		return sign + (min < 10 ? "0" : "") + min + " minutes and " + (sec < 10 ? "0" : "") + sec + " seconds.";
+}, this);
 
 	this.changeCurrentMarker = function(data){
-		console.dir(data.title());
 		resetMarkerColor(markerList);
 		resetMarkerSelector(markerList)
 		data.markerData.setIcon("http://maps.google.com/mapfiles/ms/icons/yellow-dot.png");
 		data.selector(true);
-		data.getFoursquarePhoneNumber(data)
-    };
+		self.distance(data.distance())
+		console.log(self.formattedTime())
+	};
 };
 
 
@@ -101,13 +131,11 @@ function hideMarkers(markerList) {
 };
 
 function setMarkers(markerList) {
-    console.log(markerList);
     for (var i = 0; i < markerList.length; i++) {
     	if (markerList[i].belowDistance() == true) {
       		markerList[i].markerData.setMap(map);
        	}
     }
-    console.log(markerList[2].markerData)
 };
 
 function resetMarkerColor(markerList) {
@@ -157,15 +185,12 @@ function withinDistance() {
 function filterByDistance(response){
 	var withinDistance = document.getElementById('max-miles').value;
 	var results = response.rows[0].elements;
-	console.log(results);
 	for (var i = 0; i < results.length; i++) {
 		var meters = results[i].distance.value;
 		var miles = metersToMiles(meters);
 		markerList[i].distance(miles);
 		if (miles >= withinDistance) {
-			markerList[i].belowDistance(false);
-			console.log(markerList)
-
+			markerList[i].belowDistance(false)
 		}
 		else {
 			markerList[i].belowDistance(true);
@@ -213,16 +238,6 @@ function metersToMiles(numberMeters) {
 	var miles = numberMeters * toMileConversion
 	var miles = Math.round(miles * 10)/10
 	return miles
-};
-
-function selectBike() {
-	$('#speedSelector').empty();
-	$('#speedSelector').append(bikeDiv)
-};
-
-function selectRun() {
-	$('#speedSelector').empty();
-	$('#speedSelector').append(runDiv)
 };
 
 function initMap() {
