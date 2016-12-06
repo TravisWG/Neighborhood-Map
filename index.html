@@ -15,22 +15,22 @@
 					<div id="locations-header">
 						Gym Locations
 					</div>
-						<div data-bind="foreach: markerList">
-							<div id="list-item" data-bind="visible: belowDistance, click: $parent.changeCurrentMarker">
-						    	<h3 id="marker-name" data-bind="text: title"></h3>
-						    	<div id="listings-distance" data-bind="visible: distance">
-                					<b><span data-bind="text: distanceText"></span></b>
-                				</div>
-                				<div id="location-info" data-bind="visible: selector">
-                					<div id="address" data-bind="text: address"></div>
-                					<div id="phonenumber" data-bind="text: phoneNumber"></div>
-                				</div>
-                   			</div>
-                		</div>
+					<div data-bind="foreach: markerList">
+						<div id="list-item" data-bind="visible: belowDistance, click: $parent.changeCurrentMarker">
+					    	<div id="marker-name" data-bind="text: title"></div>
+					    	<div id="listings-distance" data-bind="visible: distance">
+            					<b><span data-bind="text: distanceText"></span></b>
+            				</div>
+            				<div id="location-info" data-bind="visible: selector">
+            					<div id="address" data-bind="text: address"></div>
+            					<div id="phonenumber" data-bind="text: phoneNumber"></div>
+            				</div>
+               			</div>
+            		</div>
 				</div>
 			</div>
 			<div class="col-9">
-				<div id="list-click"><img src="images/menu.png" style="width:30px;height:30px;" onclick="menuTransition()"></div>
+				<div id="list-click"><img src="images/menu.png" alt="list toggle" style="width:30px;height:30px;" onclick="menuTransition()"></div>
 				<div id="map">
 
 				</div>
@@ -49,8 +49,8 @@
 							<option value="5">5 miles</option>
 						</select>
 						of selected location<br>
-						<input type="button" onclick="withinDistance()" value="Submit"></input>
-						<input type="button" onclick="clearFilter()" value="Clear Filter"></input>
+						<input type="button" onclick="withinDistance()" value="Submit">
+						<input type="button" onclick="clearFilter()" value="Clear Filter">
 						<div id="speedSelector">
 							Select a running speed:
 							<select id="speed" data-bind="options: runSpeed,
@@ -58,6 +58,7 @@
 															value: speed,">
 							</select>
 							<div id="distance" data-bind="foreach: markerList">
+							</div>
  							<div data-bind="if: $parent.distance, visible: selector">
  								<b>Estimated time to selected location at current speed is approximately <span data-bind="text: $parent.formattedTime()"></span></b>
  							</div>
@@ -69,6 +70,6 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="js/knockout-3.4.0.js"></script>
 		<script src="js/map.js"></script>
-    	<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDUDR9cSsSQpt_zZDIooP9Rq-CJ1TlnMPU&v=3&callback=initMap"></script>
-	</body>
+	    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDUDR9cSsSQpt_zZDIooP9Rq-CJ1TlnMPU&v=3&callback=initMap"></script>
+    </body>
 </html>
