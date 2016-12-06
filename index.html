@@ -12,25 +12,27 @@
 		<div class="container">
 			<div class="col-3">
 				<div id="listings">
-					<h1>Gym Locations:</h1>
-					<div id="list">
-						<ul data-bind="foreach: markerList">
-							<div data-bind="visible: belowDistance, click: $parent.changeCurrentMarker">
-						    	<h2 id="marker-name" data-bind="text: title"></h2>
-						    	<div data-bind="visible: distance">
+					<div id="locations-header">
+						Gym Locations
+					</div>
+						<div data-bind="foreach: markerList">
+							<div id="list-item" data-bind="visible: belowDistance, click: $parent.changeCurrentMarker">
+						    	<h3 id="marker-name" data-bind="text: title"></h3>
+						    	<div id="listings-distance" data-bind="visible: distance">
                 					<b><span data-bind="text: distanceText"></span></b>
                 				</div>
-                				<div id="formattedNumber" data-bind="visible: selector">
+                				<div id="location-info" data-bind="visible: selector">
                 					<div id="address" data-bind="text: address"></div>
-                					<div data-bind="text: phoneNumber"></div>
+                					<div id="phonenumber" data-bind="text: phoneNumber"></div>
                 				</div>
                    			</div>
-                		</ul>
-					</div>
+                		</div>
 				</div>
 			</div>
 			<div class="col-9">
+				<div id="list-click"><img src="images/menu.png" style="width:30px;height:30px;" onclick="menuTransition()"></div>
 				<div id="map">
+
 				</div>
 				<div id="data">
 					<h2>Filter results based on distance from chosen location</h2>
@@ -43,21 +45,22 @@
 							<option value="1">1 mile</option>
 							<option value="2">2 miles</option>
 							<option value="3">3 miles</option>
+							<option value="4">4 miles</option>
 							<option value="5">5 miles</option>
 						</select>
 						of selected location<br>
 						<input type="button" onclick="withinDistance()" value="Submit"></input>
 						<input type="button" onclick="clearFilter()" value="Clear Filter"></input>
 						<div id="speedSelector">
-							<h4>Select a running speed:</h4>
+							Select a running speed:
 							<select id="speed" data-bind="options: runSpeed,
 													    	optionsText: 'name',
 															value: speed,">
 							</select>
-						</div>
-						<div id="distance" data-bind="foreach: markerList">
- 								<b><div data-bind="if: $parent.distance, visible: selector">
- 								Estimated time to selected location at current speed is approximately <span data-bind="text: $parent.formattedTime()"></span></b>
+							<div id="distance" data-bind="foreach: markerList">
+ 							<div data-bind="if: $parent.distance, visible: selector">
+ 								<b>Estimated time to selected location at current speed is approximately <span data-bind="text: $parent.formattedTime()"></span></b>
+ 							</div>
 						</div>
 					</div>
 				</div>

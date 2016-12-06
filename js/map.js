@@ -240,10 +240,21 @@ function metersToMiles(numberMeters) {
 	return miles
 };
 
+function menuTransition() {
+	if ( $(".col-3").css("right") == "-250px") {
+		$(".col-3").css("right", "0px");
+		$("img").css("right", "255px");
+	}
+	else {
+		$(".col-3").css("right", "-250px");
+		$("img").css("right", "5px");
+	}
+}
+
 function initMap() {
 	map = new google.maps.Map(document.getElementById('map'), {
 	  center: {lat: 46.8772, lng: -96.7898},
-	  zoom: 12
+	  zoom: 11
 		});
 
 	largeInfowindow = new google.maps.InfoWindow();
