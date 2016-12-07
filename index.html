@@ -58,10 +58,10 @@
 															value: speed,">
 							</select>
 							<div id="distance" data-bind="foreach: markerList">
-							</div>
- 							<div data-bind="if: $parent.distance, visible: selector">
- 								<b>Estimated time to selected location at current speed is approximately <span data-bind="text: $parent.formattedTime()"></span></b>
- 							</div>
+								<div data-bind="if: $parent.distance, visible: selector">
+	 								<b>Estimated time to selected location at current speed is approximately <span data-bind="text: $parent.formattedTime()"></span></b>
+	 							</div>
+	 						</div>
 						</div>
 					</div>
 				</div>
