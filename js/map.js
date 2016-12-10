@@ -17,7 +17,8 @@ function gymMarkers(results){
 			icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
 		});
 		markers.push(marker);
-		marker.addListener('click', function() {
+
+    	marker.addListener('click', function() {
         	createInfoWindow(this, largeInfowindow);
       	});
     }
@@ -28,7 +29,7 @@ function gymMarkers(results){
     for (i = 0; i < markerList.length; i++){
     	markerList[i].getFoursquarePhoneNumber(markerList[i]);
     }
-};
+}
 
 var Marker = function(data) {
 	this.markerData = data;  //Google Maps marker data associated with this object
@@ -37,7 +38,7 @@ var Marker = function(data) {
 	this.address = ko.observable(data.address);
 	this.distance = ko.observable();
 	this.distanceText = ko.computed(function(){
-		return this.distance() + " miles from your selected location."
+		return this.distance() + " miles from your selected location.";
 	}, this);
 	this.belowDistance = ko.observable(true);
 	this.phoneNumber = ko.observable();
@@ -51,7 +52,7 @@ var Marker = function(data) {
 	//Makes JSON request using foursquareRequest string, returns venue ID to use for later searches
 	this.getFoursquarePhoneNumber = function(obj){
 		$.getJSON(obj.foursquareRequest, function(data) {
-			if (data.response.venues.length !== 0 && data.response.venues[0].contact.formattedPhone != undefined){
+			if (data.response.venues.length !== 0 && data.response.venues[0].contact.formattedPhone !== undefined){
 				var formattedPhoneNumber = data.response.venues[0].contact.formattedPhone;
 				obj.phoneNumber(formattedPhoneNumber);
 		        }
@@ -76,8 +77,8 @@ var ViewModel = function() {
 		markerList.push( new Marker(markerItem) );
 		});
 
-	this.distance = ko.observable(false)
-	this.speed = ko.observable(5)  //default value at 5 mph
+	this.distance = ko.observable(false);
+	this.speed = ko.observable(5);  //default value at 5 mph
 
 	this.runSpeed = [
 		{ name: '5 MPH', speed: 5 },
@@ -99,70 +100,69 @@ var ViewModel = function() {
  		var min = Math.floor(Math.abs(minutes));
  		var sec = Math.floor((Math.abs(minutes) * 60) % 60);
  		return sign + (min < 10 ? "0" : "") + min + " minutes and " + (sec < 10 ? "0" : "") + sec + " seconds.";
-}, this);
+	}, this);
 
 	this.changeCurrentMarker = function(data){
 		resetMarkerColor(markerList);
-		resetMarkerSelector(markerList)
+		resetMarkerSelector(markerList);
 		data.markerData.setIcon("http://maps.google.com/mapfiles/ms/icons/yellow-dot.png");
 		data.selector(true);
-		self.distance(data.distance())
-		console.log(self.formattedTime())
+		self.distance(data.distance());
+		console.log(self.formattedTime());
 	};
 };
 
 
 
 function createInfoWindow(clickedmarker, infowindow){
-	console.log(clickedmarker)
-	var inforWindowContent = "<div><b>" + clickedmarker.title + "</b></div><br><div>" + clickedmarker.address + "</div>"
+	var inforWindowContent = "<div><b>" + clickedmarker.title + "</b></div><br><div>" + clickedmarker.address + "</div>";
 	if (infowindow.marker != clickedmarker) {
 		infowindow.marker = clickedmarker;
 		infowindow.setContent(inforWindowContent);
 		infowindow.open(map, clickedmarker);
 
-	};
-};
+	}
+}
 
 function hideMarkers(markerList) {
     for (var i = 0; i < markerList.length; i++) {
       markerList[i].markerData.setMap(null);
     }
-};
+}
 
 function setMarkers(markerList) {
     for (var i = 0; i < markerList.length; i++) {
-    	if (markerList[i].belowDistance() == true) {
+    	if (markerList[i].belowDistance() === true) {
       		markerList[i].markerData.setMap(map);
        	}
     }
-};
+}
 
 function resetMarkerColor(markerList) {
 	for (var i = 0; i < markerList.length; i++) {
-		markerList[i].markerData.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png")
+		markerList[i].markerData.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
 	}
-};
+}
 
 function resetMarkerSelector(markerList) {
 	for (var i = 0; i < markerList.length; i++) {
 		markerList[i].selector(false);
 	}
-};
+}
 
 //function takes in a userLocation that is input by the user and determines distances from all marker locations
 //calls function filterByDistance()
 function withinDistance() {
 	var service = new google.maps.DistanceMatrixService();
 	var userLocation = document.getElementById('location').value;
-	if (userLocation == ""){
-		window.alert('A starting location is required.')
+	if (userLocation === ""){
+		window.alert('A starting location is required.');
 	} else{
 		hideMarkers(markerList);
 		userLocationMarker(userLocation);
 		var gymDestinations = [];
 		for (var i = 0; i < markers.length; i++){
-			gymDestinations.push(markers[i].address)
+			gymDestinations.push(markers[i].address);
 		}
 
 	service.getDistanceMatrix({
@@ -190,7 +190,7 @@ function filterByDistance(response){
 		var miles = metersToMiles(meters);
 		markerList[i].distance(miles);
 		if (miles >= withinDistance) {
-			markerList[i].belowDistance(false)
+			markerList[i].belowDistance(false);
 		}
 		else {
 			markerList[i].belowDistance(true);
@@ -198,7 +198,7 @@ function filterByDistance(response){
 	}
 	setMarkers(markerList);
 
-};
+}
 
 function userLocationMarker(userLocation){
 	geocoder = new google.maps.Geocoder();
@@ -206,17 +206,17 @@ function userLocationMarker(userLocation){
       if (status === 'OK') {
       	if (userMarker !== undefined){ //if current userMarker, resets position
       		console.log(userMarker);
-			userMarker.setPosition(results[0].geometry.location);
+					userMarker.setPosition(results[0].geometry.location);
    		}
-		else{  //if no current userMarker, creates userMarker
-			userMarker = new google.maps.Marker({
-				map: map,
-				position: results[0].geometry.location,
-				title: "Your Location",
-				animation: google.maps.Animation.BOUNCE,
-				icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-			});
-		}
+        else{  //if no current userMarker, creates userMarker
+          userMarker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location,
+            title: "Your Location",
+            animation: google.maps.Animation.BOUNCE,
+            icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+          });
+        }
       } else {
         alert('Geocode was not successful for the following reason: ' + status);
       }
@@ -227,18 +227,18 @@ function clearFilter() {
 	for (var i = 0; i < markerList.length; i++) {
 		markerList[i].belowDistance(true);
 		markerList[i].distance('');
-	};
+	}
 	setMarkers(markerList);
-};
+}
 
 //converts meters to miles, rounding to the tenth
 //called by filterByDistance()
 function metersToMiles(numberMeters) {
-	var toMileConversion = 0.000621371
-	var miles = numberMeters * toMileConversion
-	var miles = Math.round(miles * 10)/10
-	return miles
-};
+	var toMileConversion = 0.000621371;
+	var miles = numberMeters * toMileConversion;
+	var roundedMiles = Math.round(miles * 10)/10;
+	return roundedMiles;
+}
 
 function menuTransition() {
 	if ( $(".col-3").css("right") == "-250px") {
@@ -267,5 +267,5 @@ function initMap() {
 
 	service = new google.maps.places.PlacesService(map);
  	service.textSearch(gymLocations, gymMarkers);
-};
+}
 
