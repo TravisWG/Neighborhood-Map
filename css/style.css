@@ -2,13 +2,14 @@ body {
 	margin: 0px;
 	background-color: gainsboro;
 }
-.container{
+
+.container {
     width: 100%;
     display: -webkit-flex;
     display: flex;
 }
 
-.col-9{
+.col-9 {
 	width: 75%;
 }
 

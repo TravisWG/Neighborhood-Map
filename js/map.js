@@ -54,7 +54,6 @@ var Marker = function(data) {
 			if (data.response.venues.length !== 0 && data.response.venues[0].contact.formattedPhone != undefined){
 				var formattedPhoneNumber = data.response.venues[0].contact.formattedPhone;
 				obj.phoneNumber(formattedPhoneNumber);
-		        console.log(obj.phoneNumber())
 		        }
 		  	else{
 		        obj.phoneNumber("Contact info is unavailable for this location.");
@@ -115,6 +114,7 @@ var ViewModel = function() {
 
 
 function createInfoWindow(clickedmarker, infowindow){
+	console.log(clickedmarker)
 	var inforWindowContent = "<div><b>" + clickedmarker.title + "</b></div><br><div>" + clickedmarker.address + "</div>"
 	if (infowindow.marker != clickedmarker) {
 		infowindow.marker = clickedmarker;
