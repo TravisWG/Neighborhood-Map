@@ -1,7 +1,6 @@
 //Model Data
 var map;
 var markers = [];
-var userLocation;
 var userMarker;
 var markerList = [];
 
@@ -203,24 +202,24 @@ function filterByDistance(response){
 function userLocationMarker(userLocation){
 	geocoder = new google.maps.Geocoder();
 	geocoder.geocode({'address': userLocation}, function(results, status) {
-      if (status === 'OK') {
-      	if (userMarker !== undefined){ //if current userMarker, resets position
-      		console.log(userMarker);
-					userMarker.setPosition(results[0].geometry.location);
-   		}
-        else{  //if no current userMarker, creates userMarker
-          userMarker = new google.maps.Marker({
-            map: map,
-            position: results[0].geometry.location,
-            title: "Your Location",
-            animation: google.maps.Animation.BOUNCE,
-            icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-          });
-        }
-      } else {
-        alert('Geocode was not successful for the following reason: ' + status);
-      }
-    });
+	    if (status === 'OK') {
+	     	if (userMarker !== undefined){ //if current userMarker, resets position
+	      		console.log(userMarker);
+						userMarker.setPosition(results[0].geometry.location);
+	   		}
+	        else{  //if no current userMarker, creates userMarker
+	          userMarker = new google.maps.Marker({
+	            map: map,
+	            position: results[0].geometry.location,
+	            title: "Your Location",
+	            animation: google.maps.Animation.BOUNCE,
+	            icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+	          });
+	        }
+	    } else {
+	        alert('Geocode was not successful for the following reason: ' + status);
+	      }
+	    });
 }
 
 function clearFilter() {
