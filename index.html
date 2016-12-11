@@ -37,20 +37,15 @@
 				<div id="data">
 					<h2>Filter results based on distance from chosen location</h2>
 					<div id="locationForm">
-						Location: <input type="text" id="location" placeholder="743 Evergreen Terrace..."><br>
+						Location: <input data-bind="textInput: userLocationInput" placeholder="743 Evergreen Terrace..."/><br>
 					</div>
 					<div id="distanceForm">
-						Within
-						<select id="max-miles">
-							<option value="1">1 mile</option>
-							<option value="2">2 miles</option>
-							<option value="3">3 miles</option>
-							<option value="4">4 miles</option>
-							<option value="5">5 miles</option>
-						</select>
-						of selected location<br>
-						<input type="button" onclick="withinDistance()" value="Submit">
-						<input type="button" onclick="clearFilter()" value="Clear Filter">
+						Within	<select id="max-miles" data-bind="options: maxDistance,
+													    	optionsText: 'name',
+															value: maxMiles,">
+								</select>	of selected location<br>
+						<button data-bind="click: withinDistance">Submit</button>
+						<button data-bind="click: clearFilter">Clear Filter</button>
 						<div id="speedSelector">
 							Select a running speed:
 							<select id="speed" data-bind="options: runSpeed,
@@ -70,6 +65,7 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="js/knockout-3.4.0.js"></script>
 		<script src="js/map.js"></script>
-	    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDUDR9cSsSQpt_zZDIooP9Rq-CJ1TlnMPU&v=3&callback=initMap"></script>
+	    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDUDR9cSsSQpt_zZDIooP9Rq-CJ1TlnMPU&v=3&callback=initMap"
+	    onerror="mapErrorHandling()"></script>
     </body>
 </html>
