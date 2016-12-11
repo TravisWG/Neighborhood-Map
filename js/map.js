@@ -17,11 +17,11 @@ function gymMarkers(results){
 		});
 		markers.push(marker);
 
-    	marker.addListener('click', function() {
-        	createInfoWindow(this, largeInfowindow);
-      	});
+    	// marker.addListener('click', function() {
+     //    	createInfoWindow(markerLIst, largeInfowindow);
+     //    	console.log(markers)
+     //  	});
     }
-
     ko.applyBindings(new ViewModel());
 
     //calls all the Foursquare JSON requests
@@ -31,7 +31,11 @@ function gymMarkers(results){
 }
 
 var Marker = function(data) {
+	var self = this;
 	this.markerData = data;  //Google Maps marker data associated with this object
+	this.markerData.addListener('click', function() {
+		createInfoWindow(this, self, largeInfowindow);
+	});
 	this.position = this.markerData.position;
 	this.title = ko.observable(data.title);
 	this.address = ko.observable(data.address);
@@ -102,24 +106,21 @@ var ViewModel = function() {
 	}, this);
 
 	this.changeCurrentMarker = function(data){
-		resetMarkerColor(markerList);
-		resetMarkerSelector(markerList);
+		resetMarkers(markerList);
 		data.markerData.setIcon("http://maps.google.com/mapfiles/ms/icons/yellow-dot.png");
 		data.selector(true);
 		self.distance(data.distance());
-		console.log(self.formattedTime());
 	};
 };
 
-
-
-function createInfoWindow(clickedmarker, infowindow){
-	var inforWindowContent = "<div><b>" + clickedmarker.title + "</b></div><br><div>" + clickedmarker.address + "</div>";
+function createInfoWindow(clickedmarker, markerListItem, infowindow){
+	var inforWindowContent = "<div><b>" + clickedmarker.title + "</b></div><br><div>" + clickedmarker.address + "</div><br><div>" + markerListItem.phoneNumber() + "</div>";
 	if (infowindow.marker != clickedmarker) {
 		infowindow.marker = clickedmarker;
 		infowindow.setContent(inforWindowContent);
 		infowindow.open(map, clickedmarker);
-
+		resetMarkers(markerList);
+		markerListItem.markerData.setIcon("http://maps.google.com/mapfiles/ms/icons/yellow-dot.png");
 	}
 }
 
@@ -137,14 +138,9 @@ function setMarkers(markerList) {
     }
 }
 
-function resetMarkerColor(markerList) {
+function resetMarkers(markerList) {
 	for (var i = 0; i < markerList.length; i++) {
 		markerList[i].markerData.setIcon("http://maps.google.com/mapfiles/ms/icons/red-dot.png");
-	}
-}
-
-function resetMarkerSelector(markerList) {
-	for (var i = 0; i < markerList.length; i++) {
 		markerList[i].selector(false);
 	}
 }
@@ -258,13 +254,19 @@ function initMap() {
 
 	largeInfowindow = new google.maps.InfoWindow();
 
-	var gymLocations = {
-  	  location: map.center,
-  	  radius: '20000',
-   	  query: 'gym'
- 	};
-
 	service = new google.maps.places.PlacesService(map);
- 	service.textSearch(gymLocations, gymMarkers);
+
+ 	service.textSearch({
+  		location: map.center,
+  		radius: '20000',
+   		query: 'gym'
+    }, function(results, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            gymMarkers(results);
+          }
+          else {
+          	alert('Google Maps did not load successfully for the following reason: ' + status);
+          }
+        });
 }
 
